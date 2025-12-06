@@ -121,58 +121,6 @@ This document outlines the comprehensive capabilities required for a technology-
 6. **Continuous Learning**: Use AI to learn from every job and improve processes.
 
 ---
-## Cost
-1. ServiceTitan
-
-Price Range: $245–$350 per user/month
-Notes: Custom pricing for larger teams; onboarding fees may apply.
-
-2. Housecall Pro
-
-Price Range: $49–$199 per month (flat rate, up to 10 users)
-Notes: Additional fees for advanced features and add-ons.
-
-3. Jobber
-
-Price Range: $49–$249 per month
-Notes: Scales by number of users and features.
-
-4. FieldEdge
-
-Price Range: $100–$150 per user/month
-Notes: Custom quotes for enterprise; setup fees possible.
-
-5. ServiceM8
-
-Price Range: $9–$149 per month
-Notes: Tiered by number of jobs/month; add-ons extra.
-
-6. Workiz
-
-Price Range: $65–$299 per month
-Notes: Varies by number of users and feature set.
-
----
-## DNS Entries
-Here are the results for domain availability (as of December 1, 2025):
-
-Already Registered (Not Available):
-
-- servicesyncpro.com
-- tradewiseai.com
-- homegridai.com
-
-Available (No Match Found, likely unregistered):
-
-- fieldfusion360.com
-- craftopscloud.com
-- smartservehub.com
-- technestplatform.com
-- protradeengine.com
-- fixflowsuite.com
-- intellifieldmanager.com
-
----
 
 ## Conclusion
 A modern software platform for HVAC, Plumbing, and Electrical services must combine robust field service management with advanced AI capabilities, seamless customer and technician experiences, and strong integration and security. By benchmarking against industry leaders and addressing current gaps, your company can deliver a truly top-shelf, technology-enabled service.
