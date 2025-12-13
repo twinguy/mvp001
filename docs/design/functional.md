@@ -87,14 +87,6 @@ This document outlines the comprehensive capabilities required for a technology-
 
 ## AI-Enabled Features: Industry Comparison
 
-### Leading Platforms Reviewed
-- **ServiceTitan** (HVAC/Plumbing/Electrical)
-- **Housecall Pro**
-- **Jobber**
-- **FieldEdge**
-- **Workiz**
-- **Salesforce Field Service**
-
 ### Most Advanced AI Features
 - **Automated Scheduling & Dispatch**: AI optimizes technician routes and schedules for efficiency (ServiceTitan, Salesforce).
 - **Predictive Maintenance**: AI analyzes historical data and IoT sensor inputs to predict equipment failures (Salesforce, ServiceTitan).
