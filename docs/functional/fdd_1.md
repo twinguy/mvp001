@@ -1,4 +1,4 @@
-# Technical Design Document – Section 1: Customer Relationship Management (CRM)
+# Functional Design Document – Section 1: Customer Relationship Management (CRM)
 
 ## 1. Purpose & Scope
 
