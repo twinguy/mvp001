@@ -372,11 +372,27 @@ export function useCommunicationPermission() {
       setLoading(true);
       setError(null);
 
+      // Get user's org_id from profile
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('org_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile) {
+        throw new Error('Failed to load user profile');
+      }
+
       const { data, error: checkError } = await supabase.rpc(
         'crm_check_communication_permission',
         {
           p_customer_id: params.customerId,
-          p_org_id: '', // Will be resolved from profile
+          p_org_id: profile.org_id,
           p_channel: params.channel,
           p_contact_id: params.contactId || null,
           p_communication_type: params.communicationType || 'transactional',
