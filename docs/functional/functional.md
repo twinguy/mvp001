@@ -1,4 +1,4 @@
-# Day 0: Software Platform Capabilities for a Modern HVAC, Plumbing, and Electrical Services Company
+# Software Platform Capabilities for a Modern HVAC, Plumbing, and Electrical Services Company
 
 ## Executive Summary
 This document outlines the comprehensive capabilities required for a technology-enabled business offering HVAC, Plumbing, and Electrical services to both residential and commercial clients. It draws on best practices and features from leading AI-enabled field service management platforms to ensure a top-shelf solution.

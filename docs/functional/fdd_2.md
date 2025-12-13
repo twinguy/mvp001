@@ -2,7 +2,7 @@
 
 ## 1. Purpose & Scope
 
-This Technical Design Document (TDD) defines the **Scheduling & Dispatch** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It provides sufficient technical detail for engineers (and LLM-based task generators) to decompose the Scheduling & Dispatch module into concrete implementation tasks.
+This Functional Design Document (TDD) defines the **Scheduling & Dispatch** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It provides sufficient technical detail for engineers (and LLM-based task generators) to decompose the Scheduling & Dispatch module into concrete implementation tasks.
 
 - **In-scope capabilities (from `functional.md`, §2 Scheduling & Dispatch)**:
   - Real-time job scheduling and technician dispatch.

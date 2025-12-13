@@ -2,7 +2,7 @@
 
 ## 1. Purpose & Scope
 
-This Technical Design Document (TDD) defines the **Work Order Management** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It is intended to be detailed enough for engineers and LLM-based task generators to break the module into concrete implementation tasks.
+This Functional Design Document (TDD) defines the **Work Order Management** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It is intended to be detailed enough for engineers and LLM-based task generators to break the module into concrete implementation tasks.
 
 - **In-scope capabilities (from `functional.md`, §3 Work Order Management)**:
   - Digital work order creation, tracking, and completion.

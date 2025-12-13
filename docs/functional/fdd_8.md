@@ -1,6 +1,6 @@
 ## 8. Communication & Collaboration – Technical Design (Supabase + Vercel)
 
-This document specifies the technical design for **Section 8 – Communication & Collaboration** of the HVAC/Plumbing/Electrical field service platform, assuming:
+This document specifies the Functional design for **Section 8 – Communication & Collaboration** of the HVAC/Plumbing/Electrical field service platform, assuming:
 
 - **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime, Edge Functions)
 - **Frontend**: React/Next.js on Vercel (or similar modern SPA/SSR framework)

@@ -1,4 +1,4 @@
-## TDD – Predictive Maintenance & IoT Orchestrator (MicroSaaS Layer)
+## FDD – Predictive Maintenance & IoT Orchestrator (MicroSaaS Layer)
 
 ### 1. Scope & Objectives
 
@@ -10,7 +10,7 @@
 - Orchestrates actions into the core platform: **work orders, quotes, notifications, portal updates**.
 - Is deliverable as a **MicroSaaS add-on**, priced primarily **per connected asset/device**.
 
-This TDD focuses on:
+This FDD focuses on:
 
 - Capabilities, user journeys, and data flows.
 - Technical architecture (cloud + onsite edge/IoT infra).

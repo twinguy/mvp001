@@ -2,7 +2,7 @@
 
 ## 1. Purpose & Scope
 
-This Technical Design Document (TDD) defines the **Customer Portal** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It is intended to be detailed enough for engineers and LLM-based task generators to decompose the Customer Portal module into concrete implementation tasks.
+This Functional Design Document (TDD) defines the **Customer Portal** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`. It is intended to be detailed enough for engineers and LLM-based task generators to decompose the Customer Portal module into concrete implementation tasks.
 
 - **Source functional requirements (from `functional.md`, §7 Customer Portal)**:
   - Online booking and appointment management.

@@ -2,7 +2,7 @@
 
 ## 1. Purpose & Scope
 
-This Technical Design Document (TDD) defines the **Inventory & Asset Management** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`, implemented on the Supabase + Vercel stack recommended in `tooling.md`. It is designed to be explicit enough that an engineering team or an LLM can decompose it into concrete implementation tasks (DDL, Edge Functions, APIs, UI, and integrations).
+This Functional Design Document (TDD) defines the **Inventory & Asset Management** capabilities for the HVAC, Plumbing, and Electrical services platform described in `functional.md`, implemented on the Supabase + Vercel stack recommended in `tooling.md`. It is designed to be explicit enough that an engineering team or an LLM can decompose it into concrete implementation tasks (DDL, Edge Functions, APIs, UI, and integrations).
 
 - **In-scope capabilities (from `functional.md`, §5 Inventory & Asset Management)**:
   - Real-time inventory tracking.
