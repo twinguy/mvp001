@@ -3,6 +3,19 @@
 ## Executive Summary
 This document outlines the comprehensive capabilities required for a technology-enabled business offering HVAC, Plumbing, and Electrical services to both residential and commercial clients. It draws on best practices and features from leading AI-enabled field service management platforms to ensure a top-shelf solution.
 
+## Product Information
+### Product name: 
+Servexa
+
+### Components:
+Servexa Foreman
+Servexa Auth
+Servexa CRM
+Servexa Dispatch
+Servexa WorkOrders
+Servexa Portal
+Servexa Insights
+
 ---
 
 ## Core Capabilities
