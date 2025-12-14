@@ -1,0 +1,446 @@
+# Cursor Rules - HVAC/Plumbing/Electrical Services Platform
+
+## Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15+ with App Router (React Server Components, Server Actions)
+- **Language**: TypeScript (strict mode enabled)
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui (Radix UI primitives)
+- **Icons**: lucide-react
+- **Form Handling**: react-hook-form with @hookform/resolvers
+- **Validation**: Zod schemas
+- **Data Fetching**: @tanstack/react-query (for client-side), Server Actions (for mutations)
+- **Notifications**: sonner (toast notifications)
+- **Drag & Drop**: @hello-pangea/dnd
+- **Maps**: react-map-gl with Mapbox (or Leaflet as alternative)
+- **Date Handling**: date-fns
+
+### Backend
+- **BaaS**: Supabase
+  - **Database**: PostgreSQL 15+
+  - **Auth**: Supabase Auth (email/password, OAuth)
+  - **Storage**: Supabase Storage
+  - **Functions**: Supabase Edge Functions (Deno/TypeScript)
+  - **Realtime**: Supabase Realtime subscriptions
+- **Hosting**: Vercel (Next.js frontend)
+- **Payment**: Stripe (for subscriptions/billing)
+
+### Development Tools
+- **Package Manager**: npm or pnpm (prefer pnpm)
+- **Linting**: ESLint
+- **Formatting**: Prettier
+- **Type Checking**: TypeScript strict mode
+
+---
+
+## Architecture Principles
+
+### Multi-Tenancy
+- **Tenancy Model**: Single Supabase project, multi-tenant by `org_id`
+- **Isolation**: All tables include `org_id` column (UUID, FK to `orgs.id`)
+- **RLS**: Row-Level Security policies enforce `org_id` isolation
+- **Convention**: Never trust client-provided `org_id`; always derive from authenticated user's profile
+
+### Authentication & Authorization
+- **Auth Provider**: Supabase Auth
+- **Session Management**: Use `@supabase/ssr` for Next.js App Router
+- **Role-Based Access**: Roles defined in `profiles` table (owner, admin, manager, csr, dispatcher, technician, viewer)
+- **Permission Model**: Least-privilege access; document permission matrix per module
+- **Session Refresh**: Automatic via middleware
+
+### Data Access Patterns
+- **Server Components**: Default for data fetching (no client-side JS needed)
+- **Server Actions**: For mutations (forms, updates, deletes)
+- **Client Components**: Only when needed (interactivity, hooks, browser APIs)
+- **Edge Functions**: For complex business logic, integrations, background jobs
+- **Direct DB Access**: Via Supabase client for simple CRUD (with RLS)
+
+---
+
+## Code Style & Conventions
+
+### TypeScript
+- Use strict mode
+- Prefer `interface` over `type` for object shapes
+- Use `type` for unions, intersections, and utility types
+- Always type function parameters and return values
+- Use `as const` for literal types when appropriate
+- Avoid `any`; use `unknown` if type is truly unknown
+
+### File Naming
+- **Components**: PascalCase (e.g., `UserProfile.tsx`)
+- **Pages**: `page.tsx` (Next.js App Router convention)
+- **Server Actions**: `actions.ts` or descriptive name (e.g., `auth-actions.ts`)
+- **Hooks**: `use-*.ts` (e.g., `use-auth.ts`)
+- **Utilities**: kebab-case (e.g., `format-date.ts`)
+- **Types**: kebab-case (e.g., `auth-types.ts`)
+
+### Component Structure
+```typescript
+// 1. Imports (external, then internal)
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
+
+// 2. Types/Interfaces
+interface ComponentProps {
+  // ...
+}
+
+// 3. Component
+export function Component({ prop }: ComponentProps) {
+  // Hooks
+  // State
+  // Effects
+  // Handlers
+  // Render
+}
+```
+
+### Server Actions
+- Use `'use server'` directive at top of file
+- Place in `lib/` directory (e.g., `lib/auth/actions.ts`)
+- Always validate input with Zod schemas
+- Return structured error objects: `{ error: string, details?: object }`
+- Use `redirect()` from `next/navigation` for navigation after mutations
+- Use `revalidatePath()` or `revalidateTag()` for cache invalidation
+
+### Error Handling
+- **Server Actions**: Return `{ error: string }` objects, never throw
+- **Client Components**: Use try/catch and display errors via toast or Alert component
+- **API Routes**: Return proper HTTP status codes
+- **Edge Functions**: Use structured logging with trace IDs
+- **Never expose**: Internal error messages, stack traces, or sensitive data
+
+### Form Handling
+- Use `react-hook-form` with Zod resolver
+- Create Zod schemas in `lib/*/schemas.ts`
+- Use shadcn/ui `Form` components
+- Show validation errors inline
+- Disable submit button during submission
+- Show loading state with spinner
+
+---
+
+## File Structure
+
+```
+app/
+  (auth)/              # Route group (doesn't affect URL)
+    sign-up/
+      page.tsx
+      components/      # Page-specific components
+  api/                 # API routes
+  layout.tsx          # Root layout
+  page.tsx            # Home page
+
+components/
+  ui/                 # shadcn/ui components
+  auth/               # Auth-related components
+  shared/             # Shared components
+
+lib/
+  supabase/
+    client.ts         # Browser client
+    server.ts         # Server client
+    middleware.ts     # Middleware client
+  auth/
+    actions.ts        # Auth server actions
+    schemas.ts        # Auth Zod schemas
+  utils/              # Utility functions
+
+hooks/
+  use-*.ts            # Custom React hooks
+
+types/
+  *.ts                # TypeScript type definitions
+
+supabase/
+  functions/          # Edge Functions
+  migrations/         # Database migrations
+```
+
+---
+
+## Best Practices
+
+### Next.js App Router
+- **Server Components by default**: Only use `'use client'` when necessary
+- **Server Actions**: Use for mutations, not for data fetching
+- **Route Groups**: Use `(group)` syntax for organization without affecting URLs
+- **Loading States**: Use `loading.tsx` files for route-level loading
+- **Error Boundaries**: Use `error.tsx` files for error handling
+- **Metadata**: Export `metadata` object from pages/layouts
+
+### Supabase
+- **RLS Policies**: Always enable RLS; never disable for convenience
+- **Service Role**: Only use in Edge Functions; never expose to client
+- **Anon Key**: Safe for client-side; RLS protects data
+- **Connection Pooling**: Use connection pooling for server-side queries
+- **Realtime**: Subscribe only when needed; unsubscribe in cleanup
+
+### Database
+- **Migrations**: All schema changes via migrations (never manual edits)
+- **Indexes**: Create indexes for foreign keys and frequently queried columns
+- **Constraints**: Use database constraints (NOT NULL, UNIQUE, CHECK) for data integrity
+- **Enums**: Use PostgreSQL enums for fixed value sets
+- **Triggers**: Use triggers for `updated_at` timestamps and audit logging
+- **Naming**: snake_case for tables/columns, PascalCase for types
+
+### Security
+- **Input Validation**: Always validate on server (Zod schemas)
+- **SQL Injection**: Use parameterized queries (Supabase handles this)
+- **XSS**: React escapes by default; sanitize if using `dangerouslySetInnerHTML`
+- **CSRF**: Server Actions are protected by Next.js
+- **Rate Limiting**: Rely on Supabase defaults; add custom limits if needed
+- **Secrets**: Never commit secrets; use environment variables
+
+### Performance
+- **Images**: Use Next.js `Image` component with optimization
+- **Fonts**: Use `next/font` for font optimization
+- **Code Splitting**: Automatic with App Router
+- **Caching**: Use `revalidate` in fetch options, `revalidatePath` for Server Actions
+- **Database Queries**: Use indexes, limit results, paginate large datasets
+- **Bundle Size**: Import only what you need (tree-shaking)
+
+### Accessibility
+- **Semantic HTML**: Use proper HTML elements
+- **ARIA Labels**: Add when needed for screen readers
+- **Keyboard Navigation**: Ensure all interactive elements are keyboard accessible
+- **Focus Management**: Manage focus for modals, drawers, and dynamic content
+- **Color Contrast**: Meet WCAG AA standards (shadcn/ui handles this)
+
+### Testing
+- **Unit Tests**: Test utilities and pure functions
+- **Integration Tests**: Test Server Actions and API routes
+- **E2E Tests**: Test critical user flows (sign-up, login, core features)
+- **Type Safety**: TypeScript provides compile-time type checking
+
+---
+
+## Patterns to Follow
+
+### Multi-Tenant Queries
+```typescript
+// Always filter by org_id
+const { data } = await supabase
+  .from('customers')
+  .select('*')
+  .eq('org_id', orgId); // Never trust client-provided org_id
+```
+
+### Server Action Pattern
+```typescript
+'use server';
+
+import { createClient } from '@/lib/supabase/server';
+import { z } from 'zod';
+
+const schema = z.object({ /* ... */ });
+
+export async function actionName(formData: unknown) {
+  const supabase = await createClient();
+  
+  // Validate
+  const validation = schema.safeParse(formData);
+  if (!validation.success) {
+    return { error: 'Validation failed', details: validation.error.flatten() };
+  }
+  
+  // Authorize (check org_id, role, etc.)
+  const { data: profile } = await supabase.from('profiles').select('org_id, role').single();
+  if (!profile) return { error: 'Unauthorized' };
+  
+  // Execute
+  // ...
+  
+  // Revalidate
+  revalidatePath('/path');
+  
+  return { success: true };
+}
+```
+
+### Form Component Pattern
+```typescript
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+
+export function FormComponent() {
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { /* ... */ },
+  });
+  
+  async function onSubmit(data: FormData) {
+    const result = await serverAction(data);
+    if (result?.error) {
+      // Handle error
+    }
+  }
+  
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        {/* Form fields */}
+      </form>
+    </Form>
+  );
+}
+```
+
+### RLS Policy Pattern
+```sql
+-- Base policy: org_id isolation
+CREATE POLICY "table_name_select_policy"
+ON table_name FOR SELECT
+USING (org_id = get_user_org_id());
+
+-- Role-based policy: write operations
+CREATE POLICY "table_name_insert_policy"
+ON table_name FOR INSERT
+WITH CHECK (
+  org_id = get_user_org_id() AND
+  get_user_role() IN ('admin', 'manager')
+);
+```
+
+---
+
+## Things to Avoid
+
+### Security Anti-Patterns
+- ❌ Never trust client-provided `org_id` or `user_id`
+- ❌ Never disable RLS "for testing"
+- ❌ Never expose `SUPABASE_SERVICE_ROLE_KEY` to client
+- ❌ Never store secrets in code or commit them
+- ❌ Never use `eval()` or `dangerouslySetInnerHTML` without sanitization
+
+### Performance Anti-Patterns
+- ❌ Don't fetch all data when you only need a subset
+- ❌ Don't use `'use client'` unnecessarily
+- ❌ Don't create unnecessary re-renders (use `useMemo`, `useCallback` wisely)
+- ❌ Don't ignore database indexes
+- ❌ Don't load entire libraries when you only need one function
+
+### Code Quality Anti-Patterns
+- ❌ Don't use `any` type
+- ❌ Don't ignore TypeScript errors
+- ❌ Don't duplicate code (extract to utilities/components)
+- ❌ Don't create deeply nested components (extract sub-components)
+- ❌ Don't mix concerns (separate data fetching, UI, and business logic)
+
+### Next.js Anti-Patterns
+- ❌ Don't use `getServerSideProps` or `getStaticProps` (use Server Components)
+- ❌ Don't use API routes for simple CRUD (use Server Actions)
+- ❌ Don't use `useEffect` for data fetching (use Server Components or React Query)
+- ❌ Don't ignore loading and error states
+
+---
+
+## Environment Variables
+
+### Required
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=  # Server-side only
+
+# Application
+NEXT_PUBLIC_SITE_URL=
+```
+
+### Optional
+```bash
+# Stripe
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+
+# Email (if custom SMTP)
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASSWORD=
+
+# Other integrations
+MAPBOX_ACCESS_TOKEN=
+GOOGLE_CLIENT_ID=
+MICROSOFT_CLIENT_ID=
+```
+
+---
+
+## Documentation References
+
+- **Design Docs**: `docs/functional/` and `docs/technical/`
+- **TDDs**: Follow patterns from `docs/technical/tdd_*.md`
+- **Supabase Docs**: https://supabase.com/docs
+- **Next.js Docs**: https://nextjs.org/docs
+- **shadcn/ui**: https://ui.shadcn.com
+- **Zod**: https://zod.dev
+
+---
+
+## Code Generation Guidelines
+
+When generating code:
+1. **Follow TDDs**: Reference technical design documents for exact specifications
+2. **Use shadcn/ui**: Always use shadcn/ui components for UI (don't create custom components unless necessary)
+3. **Type Everything**: Generate fully typed TypeScript code
+4. **Include Error Handling**: Always handle errors gracefully
+5. **Add Loading States**: Show loading indicators during async operations
+6. **Validate Input**: Use Zod schemas for all form inputs
+7. **Follow Patterns**: Use established patterns from this file
+8. **Security First**: Never skip security checks (org_id, RLS, validation)
+9. **Accessibility**: Include proper ARIA labels and keyboard navigation
+10. **Documentation**: Add JSDoc comments for complex functions
+
+---
+
+## Module-Specific Guidelines
+
+### Authentication (Epic 1)
+- Use Supabase Auth for all auth flows
+- Server Actions for sign-up, login, logout
+- Email verification required
+- Password reset with secure token handling
+- Session management via middleware
+
+### CRM Module
+- All tables include `org_id`
+- RLS policies enforce tenant isolation
+- Use Server Components for data fetching
+- Use Server Actions for mutations
+- Real-time subscriptions for live updates
+
+### Dispatch Module
+- Route optimization via Edge Functions
+- Real-time location tracking
+- Calendar integration with OAuth
+- Notification orchestration
+- Map-based UI with react-map-gl
+
+---
+
+## Questions to Ask Before Coding
+
+1. Is this a Server Component or Client Component?
+2. Does this need authentication/authorization?
+3. Is `org_id` properly scoped?
+4. Are inputs validated with Zod?
+5. Are errors handled gracefully?
+6. Is the UI accessible?
+7. Is this performant (indexes, caching, etc.)?
+8. Does this follow the established patterns?
+
+---
+
+## Last Updated
+Generated based on project documentation as of 2025.
+
